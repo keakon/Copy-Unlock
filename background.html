@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script>
+			chrome.browserAction.onClicked.addListener(function() {
+				chrome.tabs.executeScript(null,
+					{code: "var doc = document;var body = doc.body;body.onselectstart = body.oncopy = body.onpaste = body.onkeydown = doc.onselectstart = doc.oncopy = doc.onpaste = doc.onkeydown = doc.oncontextmenu = null;"}
+				);
+			});
+		</script>
+	</head>
+</html>
