@@ -1,6 +1,6 @@
 var doc = document;
 var body = doc.body;
-body.onselectstart = body.oncopy = body.onpaste = body.onkeydown = doc.onselectstart = doc.oncopy = doc.onpaste = doc.onkeydown = doc.oncontextmenu = null;
+body.onselectstart = body.oncopy = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.onpaste = doc.onkeydown = doc.oncontextmenu = null;
 
 var url = doc.URL;
 var domain_pattern = /^https?:\/\/([^\/]+)/;
