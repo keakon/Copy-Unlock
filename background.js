@@ -86,8 +86,16 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 			for (var i = 0; i < windows.length; ++i) {
 				var tabs = windows[i].tabs;
 				var length = tabs.length;
+				var domain = result[1];
 				for (j = 0; j < length; ++j) {
-					chrome.tabs.executeScript(tabs[j].id, script);
+					var tab = tabs[j];
+					var url = tab.url;
+					if (url && url.substr(0, 4) == 'http') {
+						var result2 = domain_pattern.exec(url);
+						if (result2 && result2[1] == domain) {
+							chrome.tabs.executeScript(tab.id, script);
+						}
+					}
 				}
 			}
 		});
