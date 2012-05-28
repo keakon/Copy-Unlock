@@ -19,6 +19,7 @@ if (result) {
 	try {
 		switch(result[1]) {
 			case 'www.qidian.com':
+			case 'www.qdmm.com':
 				var element = doc.getElementById('bigcontbox');
 				if (element) {
 					element.onmousedown = null;
