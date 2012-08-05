@@ -1,6 +1,7 @@
 var doc = document;
 var body = doc.body;
-body.onselectstart = body.oncopy = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.onpaste = doc.onkeydown = doc.oncontextmenu = null;
+var html = doc.documentElement;
+html.onselectstart = html.oncopy = html.oncut = html.onpaste = html.onkeydown = html.oncontextmenu = html.onmousemove = body.oncopy = body.oncut = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.oncut = doc.onpaste = doc.onkeydown = doc.oncontextmenu = null;
 body.style.webkitUserSelect = 'auto';
 
 var div = document.createElement('div');
@@ -27,6 +28,10 @@ if (result) {
 				break;
 			case 'blog.naver.com':
 				unsafeWindow.$Fn.freeElement(unsafeWindow.document);
+				break;
+			case 'www.motie.com':
+				element = jQuery('.page-content>pre')[0];
+				element.ondragstart = element.oncopy = element.oncut = element.oncontextmenu = null;
 				break;
 		}
 	} catch (e) {
