@@ -4,6 +4,15 @@ var html = doc.documentElement;
 html.onselectstart = html.oncopy = html.oncut = html.onpaste = html.onkeydown = html.oncontextmenu = html.onmousemove = body.oncopy = body.oncut = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.oncut = doc.onpaste = doc.onkeydown = doc.oncontextmenu = null;
 body.style.webkitUserSelect = 'auto';
 
+function defaultHandler(event) {
+	event.returnValue = true;
+}
+for (event_type in ['selectstart', 'copy', 'cut', 'paste', 'keydown', 'contextmenu', 'dragstart']) {
+	html.addEventListener(event_type, defaultHandler);
+	body.addEventListener(event_type, defaultHandler);
+	doc.addEventListener(event_type, defaultHandler);
+}
+
 var div = document.createElement('div');
 div.setAttribute('onclick', 'return window;');
 var unsafeWindow = div.onclick();
@@ -32,6 +41,14 @@ if (result) {
 			case 'www.motie.com':
 				element = jQuery('.page-content>pre')[0];
 				element.ondragstart = element.oncopy = element.oncut = element.oncontextmenu = null;
+				break;
+			case 'board.miznet.daum.net':
+				var gaia = unsafeWindow.gaia;
+				doc.removeEventListener('selectstart', gaia.blockContent, false);
+				doc.removeEventListener('dragstart', gaia.blockContent, false);
+				doc.removeEventListener('contextmenu', gaia.blockContent, false);
+				doc.removeEventListener('copy', gaia.blockContent, false);
+				doc.removeEventListener('keydown', gaia.blockContent, false);
 				break;
 		}
 	} catch (e) {
