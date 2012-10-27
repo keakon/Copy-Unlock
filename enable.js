@@ -1,7 +1,7 @@
 var doc = document;
 var body = doc.body;
 var html = doc.documentElement;
-html.onselectstart = html.oncopy = html.oncut = html.onpaste = html.onkeydown = html.oncontextmenu = html.onmousemove = body.oncopy = body.oncut = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.oncut = doc.onpaste = doc.onkeydown = doc.oncontextmenu = null;
+html.onselectstart = html.oncopy = html.oncut = html.onpaste = html.onkeydown = html.oncontextmenu = html.onmousemove = body.oncopy = body.oncut = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.oncut = doc.onpaste = doc.onkeydown = doc.oncontextmenu = doc.onmousedown = doc.onmouseup = null;
 body.style.webkitUserSelect = 'auto';
 
 function defaultHandler(event) {
@@ -50,6 +50,10 @@ if (result) {
 				doc.removeEventListener('copy', gaia.blockContent, false);
 				doc.removeEventListener('keydown', gaia.blockContent, false);
 				break;
+			case 'book.zongheng.com':
+				element = jQuery('.readcon')[0];
+				element.style.webkitUserSelect = 'auto';
+				element.onselectstart = null;
 		}
 	} catch (e) {
 	}
