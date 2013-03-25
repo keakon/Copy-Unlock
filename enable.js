@@ -54,6 +54,17 @@ if (result) {
 				element = jQuery('.readcon')[0];
 				element.style.webkitUserSelect = 'auto';
 				element.onselectstart = null;
+				break;
+			case 'www.kasi-time.com':
+				element = doc.getElementById('center');
+				if (element) {
+					element.onmousedown = null;
+					element = element.getElementsByClassName('mainkashi');
+					if (element) {
+						element[0].style.webkitUserSelect = 'auto';
+					}
+				}
+				break;
 		}
 	} catch (e) {
 	}
