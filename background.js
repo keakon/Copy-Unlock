@@ -1,7 +1,12 @@
 var domain_pattern = /^https?:\/\/([^\/]+)/;
 var domains_map = {};
+var script_src = chrome.runtime.getURL('enable.js');
+var inject_script =
+	"var script = document.createElement('script');\
+	script.src = '" + script_src + "';\
+	document.body.appendChild(script);"
 var script = {
-	file: 'enable.js',
+	code: inject_script,
 	allFrames: true
 };
 
@@ -92,7 +97,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 					var url = tab.url;
 					if (url && url.substr(0, 4) == 'http') {
 						var result2 = domain_pattern.exec(url);
+						console.log(result2[1]);
 						if (result2 && result2[1] == domain) {
+							console.log('match');
 							chrome.tabs.executeScript(tab.id, script);
 						}
 					}

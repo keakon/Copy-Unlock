@@ -1,3 +1,4 @@
+(function() {
 var doc = document;
 var body = doc.body;
 var html = doc.documentElement;
@@ -13,13 +14,18 @@ for (event_type in ['selectstart', 'copy', 'cut', 'paste', 'keydown', 'contextme
 	doc.addEventListener(event_type, defaultHandler);
 }
 
-var div = document.createElement('div');
-div.setAttribute('onclick', 'return window;');
-var unsafeWindow = div.onclick();
-var jQuery = unsafeWindow.jQuery;
+var jQuery = window.jQuery;
 if (jQuery) {
-	jQuery(unsafeWindow.document).unbind();
-	jQuery(unsafeWindow.body).unbind();
+	jQuery(doc).unbind();
+	jQuery(body).unbind();
+}
+
+var $Fn = window.$Fn;
+if ($Fn) {
+	try {
+		$Fn.freeElement(doc);
+		$Fn.freeElement(body);
+	} catch (e) {}
 }
 
 var url = doc.URL;
@@ -29,14 +35,12 @@ if (result) {
 	try {
 		switch(result[1]) {
 			case 'www.qidian.com':
+			case 'read.qidian.com':
 			case 'www.qdmm.com':
 				var element = doc.getElementById('bigcontbox');
 				if (element) {
 					element.onmousedown = null;
 				}
-				break;
-			case 'blog.naver.com':
-				unsafeWindow.$Fn.freeElement(unsafeWindow.document);
 				break;
 			case 'www.motie.com':
 				element = jQuery('.page-content>pre')[0];
@@ -65,7 +69,10 @@ if (result) {
 					}
 				}
 				break;
+			case 'detail.china.alibaba.com':
+				jQuery('div.mod-detail-gallery').unbind();
 		}
 	} catch (e) {
 	}
 }
+})();
