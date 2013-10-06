@@ -28,6 +28,11 @@ if ($Fn) {
 	} catch (e) {}
 }
 
+var jindo = window.jindo;
+if (jindo) {
+	jindo.$A = null;
+}
+
 var url = doc.URL;
 var domain_pattern = /^https?:\/\/([^\/]+)/;
 var result = domain_pattern.exec(url);
@@ -36,6 +41,7 @@ if (result) {
 		switch(result[1]) {
 			case 'www.qidian.com':
 			case 'read.qidian.com':
+			case 'big5.qidian.com':
 			case 'www.qdmm.com':
 				var element = doc.getElementById('bigcontbox');
 				if (element) {
@@ -71,6 +77,16 @@ if (result) {
 				break;
 			case 'detail.china.alibaba.com':
 				jQuery('div.mod-detail-gallery').unbind();
+				break;
+			case 'www.businessweekly.com.tw':
+				jQuery('div.maincontent').unbind();
+				break;
+			case 'petitlyrics.com':
+				doc.getElementById('lyrics_window').style.webkitUserSelect = 'auto';
+				break;
+			case 'tv.cntv.cn':
+				doc.getElementById('epg_list').style.webkitUserSelect = 'auto';
+				break;
 		}
 	} catch (e) {
 	}
