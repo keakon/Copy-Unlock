@@ -203,6 +203,14 @@ if (result) {
 				element = doc.getElementById('pl');
 				element.oncontextmenu = element.onselectstart = element.ondragstart = null;
 				break;
+			case 'www.mygreatdaily.com':
+			case 'www.thegreatdaily.com':
+				var $elements = jQuery('p').off();
+				var length = $elements.length;
+				for (var i = 0; i < length; ++ i) {
+					allowUserSelect($elements[i]);
+				}
+				break;
 		}
 	} catch (e) {
 		console.log(e);
