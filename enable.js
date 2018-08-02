@@ -5,7 +5,7 @@ var html = doc.documentElement;
 
 function clearHandlers() {
 	html.onselectstart = html.oncopy = html.oncut = html.onpaste = html.onkeydown = html.oncontextmenu = html.onmousemove = body.oncopy = body.oncut = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.oncut = doc.onpaste = doc.onkeydown = doc.oncontextmenu = doc.onmousedown = doc.onmouseup = window.onkeyup = window.onkeydown = null;
-	body.style.webkitUserSelect = 'auto';
+	html.style.webkitUserSelect = html.style.userSelect = body.style.webkitUserSelect = body.style.userSelect = 'auto';
 }
 clearHandlers();
 
@@ -21,7 +21,7 @@ for (event_type in ['selectstart', 'copy', 'cut', 'paste', 'keydown', 'contextme
 var jQuery = window.jQuery;
 if (jQuery) {
 	var $doc = jQuery(doc);
-	var $body = jQuery(body)
+	var $body = jQuery(body);
 	if ($doc.off) {
 		$doc.off();
 		$body.off();
@@ -60,7 +60,7 @@ function replaceElemntsEventsWithClone(elements) {
 }
 
 function allowUserSelect(element) {
-	element.style.webkitUserSelect = 'auto';
+	element.style.webkitUserSelect = element.style.userSelect = 'auto';
 }
 
 function allowUserSelectById(element_id) {
@@ -68,7 +68,11 @@ function allowUserSelectById(element_id) {
 }
 
 function allowUserSelectByClassName(element_class) {
-	allowUserSelect(doc.getElementsByClassName(element_class)[0]);
+	var elements = doc.getElementsByClassName(element_class);
+	var len = elements.length;
+	for (var i = 0; i < len; ++i) {
+		allowUserSelect(elements[i]);
+	}
 }
 
 var url = doc.URL;
@@ -82,11 +86,17 @@ if (result) {
 			return;
 		}
 		switch(domain) {
+			case 'wenku.baidu.com':
+				var element = doc.getElementsByClassName('doc-reader');
+				if (element.length) {
+					element[0].oncopy = null;
+				}
+				break;
 			case 'www.qidian.com':
 			case 'read.qidian.com':
 			case 'big5.qidian.com':
 			case 'www.qdmm.com':
-				var element = doc.getElementById('bigcontbox');
+				element = doc.getElementById('bigcontbox');
 				if (element) {
 					element.onmousedown = null;
 				}
@@ -192,6 +202,7 @@ if (result) {
 				jQuery('img.fixed').unbind('contextmenu');
 				break;
 			case 'www.van698.com':
+			case 'www.91yanqing.com':
 				replaceElemntEventsWithClone(body);
 				break;
 			case 'rocklyric.jp':
@@ -209,6 +220,66 @@ if (result) {
 				var length = $elements.length;
 				for (var i = 0; i < length; ++ i) {
 					allowUserSelect($elements[i]);
+				}
+				break;
+			case 'mojim.com':
+				allowUserSelectById('fsZ');
+				break;
+			case 'storybird.com':
+				allowUserSelectByClassName('cm-component');
+				break;
+			case 'su.lianjia.com':
+				allowUserSelectByClassName('xiaoquOverview');
+				break;
+			case 'life.tw':
+				element = doc.getElementById('mainContent').getElementsByTagName('iframe');
+				if (element.length) {
+					element = element[0].contentWindow.document;
+					element.oncontextmenu = element.onselectstart = element.onselect = null;
+					jQuery(element).off();
+				}
+				break;
+			case 'www.coco01.today':
+				element = doc.getElementsByClassName('post-html');
+				if (element.length) {
+					element = element[0];
+					var elements = element.getElementsByTagName('p');
+					jQuery(elements).off();
+					var length = elements.length;
+					for (i = 0; i < length; ++i) {
+						allowUserSelect(elements[i]);
+					}
+				}
+				break;
+			case 'news.missevan.com':
+				element = doc.getElementById('article');
+				element.oncontextmenu = element.onselectstart = null;
+				break;
+			case 'hk.koreadepart.com':
+			case 'tw.koreadepart.com':
+				Evt.remove(doc, 'mousedown', MouseEvent.no_right);
+				Evt.remove(doc, 'contextmenu', MouseEvent.stop_event);
+				Evt.remove(doc, 'selectstart', MouseEvent.stop_event);
+				break;
+			case 'chokstick.com':
+				jQuery('<style>.disable-select{webkit-user-select:auto;user-select:auto}</style>').appendTo(body);
+				break;
+			case 'imac.hk':
+				window.jQuery = function() {
+					return {'css': function(){}};
+				};
+				allowUserSelect(html);
+				allowUserSelectByClassName('entry-content');
+				break;
+			case 'www.uta-net.com':
+				jQuery('<style>#flash_area>img{display:none}</style>').appendTo(body);
+				break;
+			case 'ycg.qq.com':
+				elements = doc.getElementsByClassName('box-cover-works');
+				length = elements.length;
+				for (i = 0; i < length; i++) {
+					element = elements[i];
+					element.oncontextmenu = element.onselectstart = null;
 				}
 				break;
 		}
