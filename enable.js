@@ -4,7 +4,7 @@ var body = doc.body;
 var html = doc.documentElement;
 
 function clearHandlers() {
-	html.onselectstart = html.oncopy = html.oncut = html.onpaste = html.onkeydown = html.oncontextmenu = html.onmousemove = body.oncopy = body.oncut = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.oncut = doc.onpaste = doc.onkeydown = doc.oncontextmenu = doc.onmousedown = doc.onmouseup = window.onkeyup = window.onkeydown = null;
+	html.onselectstart = html.oncopy = html.oncut = html.onpaste = html.onkeydown = html.oncontextmenu = html.onmousemove = body.oncopy = body.oncut = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousedown = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.oncut = doc.onpaste = doc.onkeydown = doc.oncontextmenu = doc.onmousedown = doc.onmouseup = window.onkeyup = window.onkeydown = null;
 	html.style.webkitUserSelect = html.style.userSelect = body.style.webkitUserSelect = body.style.userSelect = 'auto';
 }
 clearHandlers();
@@ -86,12 +86,6 @@ if (result) {
 			return;
 		}
 		switch(domain) {
-			case 'wenku.baidu.com':
-				var element = doc.getElementsByClassName('doc-reader');
-				if (element.length) {
-					element[0].oncopy = null;
-				}
-				break;
 			case 'www.qidian.com':
 			case 'read.qidian.com':
 			case 'big5.qidian.com':
@@ -181,6 +175,7 @@ if (result) {
 				doc.querySelector('.describe>div').onselectstart = null;
 				break;
 			case 'pad.skyozora.com':
+			case 'vendor.tahoecn.com':
 				jQuery('<style>*{-webkit-user-select:auto}</style>').appendTo(body);
 				break;
 			case 'news.cari.com.my':
@@ -281,6 +276,53 @@ if (result) {
 					element = elements[i];
 					element.oncontextmenu = element.onselectstart = null;
 				}
+				break;
+			case 'fanyi.youdao.com':
+				element = doc.getElementsByClassName('doc__container--unpay');
+				if (element.length) {
+					element = element[0];
+					element.style.webkitUserSelect = element.style.userSelect = 'auto';
+				}
+				break;
+			case 'mdpr.jp':
+				elements = doc.getElementsByTagName('img');
+				length = elements.length;
+				for (i = 0; i < length; i++) {
+					element = elements[i];
+					element.oncontextmenu = element.onmousedown = element.onselectstart = null;
+				}
+				break;
+			case 'www.bilibili.com':
+				jQuery('.article-holder.unable-reprint').off().css('-webkit-user-select', 'auto').css('user-select', 'auto');
+				break;
+			case 'www.webtoons.com':
+				elements = doc.getElementsByTagName('img');
+				length = elements.length;
+				for (i = 0; i < length; i++) {
+					element = elements[i];
+					element.oncontextmenu = element.ondragstart = element.onselectstart = null;
+				}
+				break;
+			case 'www.winentaste.com':
+				element = doc.getElementsByTagName('main');
+				if (element.length) {
+					element = element[0];
+					element.oncontextmenu = element.onselectstart = null;
+				}
+				break;
+			case 'www.oricon.co.jp':
+				element = doc.getElementsByClassName('all-lyrics');
+				if (element.length) {
+					element = element[0];
+					element.style.webkitUserSelect = element.style.userSelect = 'auto';
+					element.oncontextmenu = element.onmousedown = element.onselectstart = null;
+				}
+				break;
+			case 'hshi.58.com':
+				jQuery("#generalDesc").off();
+				break;
+			case 'www.heatmetering.cn':
+				jQuery('.box').unbind();
 				break;
 		}
 	} catch (e) {
