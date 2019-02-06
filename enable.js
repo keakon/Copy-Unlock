@@ -44,7 +44,7 @@ if (jindo) {
 	jindo.$A = null;
 }
 
-function replaceElemntEventsWithClone(element) {
+function replaceElementEventsWithClone(element) {
 	var clone = element.cloneNode();
 	while (element.firstChild) {
 		clone.appendChild(element.lastChild);
@@ -52,10 +52,10 @@ function replaceElemntEventsWithClone(element) {
 	element.parentNode.replaceChild(clone, element);
 }
 
-function replaceElemntsEventsWithClone(elements) {
+function replaceElementsEventsWithClone(elements) {
 	var length = elements.length;
 	for (var i = 0; i < length; ++ i) {
-		replaceElemntEventsWithClone(elements[i]);
+		replaceElementEventsWithClone(elements[i]);
 	}
 }
 
@@ -82,10 +82,17 @@ if (result) {
 	try {
 		var domain = result[1];
 		if (domain.length > 11 && domain.substr(-11, 11) == '.lofter.com') {
-			replaceElemntsEventsWithClone(jQuery('.pic>a'));
+			replaceElementsEventsWithClone(jQuery('.pic>a'));
 			return;
 		}
 		switch(domain) {
+			// case 'wenku.baidu.com':  // 替换后会导致「继续阅读」按钮失效，可以尝试把老的按钮换回来
+			// 	var element = doc.getElementsByClassName('doc-reader');
+			// 	if (element.length) {
+			// 		element[0].oncopy = null;
+			// 		replaceElementEventsWithClone(doc.getElementById('reader-container-1'));
+			// 	}
+			// 	break;
 			case 'www.qidian.com':
 			case 'read.qidian.com':
 			case 'big5.qidian.com':
@@ -198,7 +205,9 @@ if (result) {
 				break;
 			case 'www.van698.com':
 			case 'www.91yanqing.com':
-				replaceElemntEventsWithClone(body);
+			case 'www.99lib.net':  // 不支持右键
+			// case 'www.diyibanzhu9.com':  // 不支持右键，会导致左右键翻页无效
+				replaceElementEventsWithClone(body);
 				break;
 			case 'rocklyric.jp':
 				element = doc.getElementById('lyric_area');
@@ -278,11 +287,7 @@ if (result) {
 				}
 				break;
 			case 'fanyi.youdao.com':
-				element = doc.getElementsByClassName('doc__container--unpay');
-				if (element.length) {
-					element = element[0];
-					element.style.webkitUserSelect = element.style.userSelect = 'auto';
-				}
+				allowUserSelectByClassName('doc__container--unpay');
 				break;
 			case 'mdpr.jp':
 				elements = doc.getElementsByTagName('img');
@@ -314,7 +319,7 @@ if (result) {
 				element = doc.getElementsByClassName('all-lyrics');
 				if (element.length) {
 					element = element[0];
-					element.style.webkitUserSelect = element.style.userSelect = 'auto';
+					allowUserSelect(element);
 					element.oncontextmenu = element.onmousedown = element.onselectstart = null;
 				}
 				break;
@@ -323,6 +328,9 @@ if (result) {
 				break;
 			case 'www.heatmetering.cn':
 				jQuery('.box').unbind();
+				break;
+			case 'time.geekbang.org':  // 不支持右键
+				setTimeout(function() {replaceElementsEventsWithClone(doc.getElementsByClassName('_2qqGfSEe_0'));}, 1000);
 				break;
 		}
 	} catch (e) {
