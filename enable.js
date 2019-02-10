@@ -19,17 +19,6 @@ for (event_type in ['selectstart', 'copy', 'cut', 'paste', 'keydown', 'contextme
 }
 
 var jQuery = window.jQuery;
-if (jQuery) {
-	var $doc = jQuery(doc);
-	var $body = jQuery(body);
-	if ($doc.off) {
-		$doc.off();
-		$body.off();
-	} else {
-		$doc.unbind();
-		$body.unbind();
-	}
-}
 
 var $Fn = window.$Fn;
 if ($Fn) {
@@ -85,19 +74,31 @@ if (result) {
 			replaceElementsEventsWithClone(jQuery('.pic>a'));
 			return;
 		}
+
+		if (domain == 'wenku.baidu.com') {
+			jQuery('.doc-reader').off('copy').removeAttr('oncopy');
+			jQuery('#reader-container-1').off('copy');
+			return;
+		}
+
+		if (jQuery) {  // 百度文库不能覆盖这些事件
+			var $doc = jQuery(doc);
+			var $body = jQuery(body);
+			if ($doc.off) {
+				$doc.off();
+				$body.off();
+			} else {
+				$doc.unbind();
+				$body.unbind();
+			}
+		}
+
 		switch(domain) {
-			// case 'wenku.baidu.com':  // 替换后会导致「继续阅读」按钮失效，可以尝试把老的按钮换回来
-			// 	var element = doc.getElementsByClassName('doc-reader');
-			// 	if (element.length) {
-			// 		element[0].oncopy = null;
-			// 		replaceElementEventsWithClone(doc.getElementById('reader-container-1'));
-			// 	}
-			// 	break;
 			case 'www.qidian.com':
 			case 'read.qidian.com':
 			case 'big5.qidian.com':
 			case 'www.qdmm.com':
-				element = doc.getElementById('bigcontbox');
+				var element = doc.getElementById('bigcontbox');
 				if (element) {
 					element.onmousedown = null;
 				}
@@ -331,6 +332,9 @@ if (result) {
 				break;
 			case 'time.geekbang.org':  // 不支持右键
 				setTimeout(function() {replaceElementsEventsWithClone(doc.getElementsByClassName('_2qqGfSEe_0'));}, 1000);
+				break;
+			case 'www.jerecuperemonex.com':
+				jQuery('.unselectable').removeClass('unselectable').removeAttr('unselectable');
 				break;
 		}
 	} catch (e) {
