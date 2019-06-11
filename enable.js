@@ -18,6 +18,20 @@ for (event_type in ['selectstart', 'copy', 'cut', 'paste', 'keydown', 'contextme
 	doc.addEventListener(event_type, defaultHandler);
 }
 
+function removeEventAttributes(element) {
+	element.removeAttribute('oncontextmenu');
+	element.removeAttribute('ondragstart');
+	element.removeAttribute('onselectstart');
+	element.removeAttribute('onselect');
+	element.removeAttribute('oncopy');
+	element.removeAttribute('onbeforecopy');
+	element.removeAttribute('oncut');
+	element.removeAttribute('onpaste');
+	element.removeAttribute('onclick');
+	element.removeAttribute('onmousedown');
+	element.removeAttribute('onmouseup');
+}
+
 var jQuery = window.jQuery;
 
 var $Fn = window.$Fn;
@@ -36,7 +50,7 @@ if (jindo) {
 function replaceElementEventsWithClone(element) {
 	var clone = element.cloneNode();
 	while (element.firstChild) {
-		clone.appendChild(element.lastChild);
+		clone.appendChild(element.firstChild);
 	}
 	element.parentNode.replaceChild(clone, element);
 }
@@ -176,15 +190,21 @@ if (result) {
 				jQuery('#article-content>p').unbind().css('-webkit-user-select', 'auto');
 				break;
 			case 'yuedu.163.com':
-				jQuery('.portrait-player .article').css('-webkit-user-select', 'auto');
-				jQuery('#J_Player').unbind();
+			case 'caiwei.yuedu.163.com':
+			case 'guofeng.yuedu.163.com':
+				setTimeout(function() {
+					jQuery('<style>.portrait-player .article{-webkit-user-select:auto;user-select:auto}</style>').appendTo(jQuery(body).unbind());
+					$element = jQuery('#J_Player').unbind();
+					replaceElementEventsWithClone($element[0]);
+				}, 1000)
 				break;
 			case 'office.fang.com':
 				doc.querySelector('.describe>div').onselectstart = null;
 				break;
 			case 'pad.skyozora.com':
 			case 'vendor.tahoecn.com':
-				jQuery('<style>*{-webkit-user-select:auto}</style>').appendTo(body);
+			case 'www.iyingdi.cn':
+				jQuery('<style>*{-webkit-user-select:auto;user-select:auto}</style>').appendTo(body);
 				break;
 			case 'news.cari.com.my':
 				element = jQuery('.bm .d')[0];
@@ -335,6 +355,75 @@ if (result) {
 				break;
 			case 'www.jerecuperemonex.com':
 				jQuery('.unselectable').removeClass('unselectable').removeAttr('unselectable');
+				break;
+			case 'ms.zjer.cn':
+				element = doc.getElementById('stop');
+				element.oncontextmenu = element.onselectstart = element.onmousedown = element.onmouseup = null;
+				break;
+			case 'mail-reibun.com':
+				jQuery('<style>.manner.supervision{-webkit-user-select:auto;user-select:auto}</style>').appendTo(body);
+				break;
+			case 'www.canalys.com':
+				allowUserSelectById('article');
+				break;
+			case 'www.yifatong.com':
+				element = doc.getElementById('contract_content');
+				allowUserSelect(element);
+				jQuery(element).unbind();
+				break;
+			case 'weibo.com':
+				elements = doc.getElementsByClassName('WBA_content');
+				if (elements.length > 0) {
+					elements = elements[0].getElementsByTagName('div');
+					if (elements.length > 0) {
+						element = elements[0];
+						element.removeAttribute('oncopy');
+						element.removeAttribute('oncut');
+						element.removeAttribute('onselectstart');
+						replaceElementEventsWithClone(element);
+					}
+				}
+				break;
+			case 'www.longmabookcn.com':
+				removeEventAttributes(body);
+				element = doc.getElementById('readpagewidth');
+				removeEventAttributes(element);
+				allowUserSelect(element);
+				element = doc.getElementById('paperrall');
+				removeEventAttributes(element);
+				allowUserSelect(element);
+				element = doc.getElementById('mypaperhouse');
+				removeEventAttributes(element);
+				allowUserSelect(element);
+				element = doc.getElementById('mypaperhome');
+				removeEventAttributes(element);
+				allowUserSelect(element);
+				element = doc.getElementById('mypaper');
+				removeEventAttributes(element);
+				allowUserSelect(element);
+				jQuery('<style>*:not(input):not(textarea){-webkit-user-select:auto}</style>').appendTo(body);
+				break;
+			case 'beetify.com':
+				allowUserSelect(body);
+				jQuery('<style>body{user-select:auto !important}</style>').appendTo(body);
+				break;
+			case 'www.hzmedia.com.cn':
+				allowUserSelect(doc.getElementById('content'));
+				break;
+			case 'www.goeugo.com':
+				jQuery('div.main').unbind();
+				break;
+			case 'car.ctrip.com':
+				allowUserSelectByClassName('beginners-guide');
+				break;
+			case 'www.chinathinktanks.org.cn':
+				elements = doc.getElementsByClassName('container');
+				if (elements.length > 0) {
+					removeEventAttributes(elements[0]);
+				}
+				break;
+			case 'www.liuxue86.com':
+				replaceElementEventsWithClone(doc.getElementById('article-content'));
 				break;
 		}
 	} catch (e) {
