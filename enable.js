@@ -89,25 +89,11 @@ if (result) {
 			return;
 		}
 
-		if (domain == 'wenku.baidu.com') {
-			jQuery('.doc-reader').off('copy').removeAttr('oncopy');
-			jQuery('#reader-container-1').off('copy');
-			return;
-		}
-
-		if (jQuery) {  // 百度文库不能覆盖这些事件
-			var $doc = jQuery(doc);
-			var $body = jQuery(body);
-			if ($doc.off) {
-				$doc.off();
-				$body.off();
-			} else {
-				$doc.unbind();
-				$body.unbind();
-			}
-		}
-
-		switch(domain) {
+		switch (domain) {
+			case 'wenku.baidu.com':
+				jQuery('.doc-reader').off('copy').removeAttr('oncopy');
+				jQuery('#reader-container-1').off('copy');
+				return;
 			case 'www.qidian.com':
 			case 'read.qidian.com':
 			case 'big5.qidian.com':
@@ -116,7 +102,25 @@ if (result) {
 				if (element) {
 					element.onmousedown = null;
 				}
-				break;
+				jQuery(body).off('contextmenu copy cut');
+				return;
+		}
+
+		if (jQuery) {  // 百度文库不能覆盖这些事件，起点会造成无限递归 bug
+			var $doc = jQuery(doc);
+			var $body = jQuery(body);
+			if ($doc.off) {
+				$doc.off();
+				$body.off();
+				jQuery(window).off();
+			} else {
+				$doc.unbind();
+				$body.unbind();
+				jQuery(window).unbind();
+			}
+		}
+
+		switch(domain) {
 			case 'www.motie.com':
 				element = jQuery('.page-content>pre')[0];
 				element.ondragstart = element.oncopy = element.oncut = element.oncontextmenu = null;
@@ -226,9 +230,10 @@ if (result) {
 				break;
 			case 'www.van698.com':
 			case 'www.91yanqing.com':
-			case 'www.99lib.net':  // 不支持右键
-			// case 'www.diyibanzhu9.com':  // 不支持右键，会导致左右键翻页无效
+			case 'www.99lib.net':
+			// case 'www.diyibanzhu9.com':  // 会导致左右键翻页无效
 				replaceElementEventsWithClone(body);
+				doc.body.oncontextmenu = function(e){e.stopPropagation()};
 				break;
 			case 'rocklyric.jp':
 				element = doc.getElementById('lyric_area');
@@ -424,6 +429,33 @@ if (result) {
 				break;
 			case 'www.liuxue86.com':
 				replaceElementEventsWithClone(doc.getElementById('article-content'));
+				break;
+			case 'www.horou.com':
+				element = document.createElement('style');
+				element.append('*{-webkit-user-select:auto;user-select:auto}');
+				body.append(element);
+				break;
+			case 'www.sis001.com':
+				allowUserSelectByClassName('noSelect');
+				break;
+			case 'ulsterherald.com':
+				jQuery('<style>*:not(input):not(textarea){-webkit-user-select:auto}</style>').appendTo(body);
+				break;
+			case 'app.motie.com':
+				elements = doc.getElementsByClassName('note');
+				for (i = 0; i < elements.length; ++i) {
+					element = elements[i];
+					removeEventAttributes(element);
+				}
+				break;
+			case 'www.laokaoya.com':
+				jQuery('<style>html,body,div,p,span{-webkit-user-select:auto !important;user-select:auto !important}::selection{background-color:#dcdcdc !important}</style>').appendTo(body);
+				break;
+			case 'sosad.fun':
+				allowUserSelectByClassName('chapter');
+				break;
+			case 'www.wattpad.com':
+				jQuery('[oncontextmenu]').removeAttr('oncontextmenu');
 				break;
 		}
 	} catch (e) {
