@@ -96,6 +96,7 @@ if (result) {
 				return;
 			case 'www.qidian.com':
 			case 'read.qidian.com':
+			case 'vipreader.qidian.com':
 			case 'big5.qidian.com':
 			case 'www.qdmm.com':
 				var element = doc.getElementById('bigcontbox');
@@ -208,6 +209,7 @@ if (result) {
 			case 'pad.skyozora.com':
 			case 'vendor.tahoecn.com':
 			case 'www.iyingdi.cn':
+			case 'www.gardenia.net':
 				jQuery('<style>*{-webkit-user-select:auto;user-select:auto}</style>').appendTo(body);
 				break;
 			case 'news.cari.com.my':
@@ -270,16 +272,9 @@ if (result) {
 				}
 				break;
 			case 'www.coco01.today':
-				element = doc.getElementsByClassName('post-html');
-				if (element.length) {
-					element = element[0];
-					var elements = element.getElementsByTagName('p');
-					jQuery(elements).off();
-					var length = elements.length;
-					for (i = 0; i < length; ++i) {
-						allowUserSelect(elements[i]);
-					}
-				}
+				jQuery('[unselectable]').off().removeAttr('unselectable').each(function() {
+					allowUserSelect(this);
+				});
 				break;
 			case 'news.missevan.com':
 				element = doc.getElementById('article');
