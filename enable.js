@@ -3,9 +3,29 @@ var doc = document;
 var body = doc.body;
 var html = doc.documentElement;
 
+function allowUserSelect(element) {
+	element.setAttribute('style', '-webkit-user-select: auto !important');
+	element.setAttribute('style', 'user-select: auto !important');
+	return element;
+}
+
+function allowUserSelectById(element_id) {
+	return allowUserSelect(doc.getElementById(element_id));
+}
+
+function allowUserSelectByClassName(element_class) {
+	var elements = doc.getElementsByClassName(element_class);
+	var len = elements.length;
+	for (var i = 0; i < len; ++i) {
+		allowUserSelect(elements[i]);
+	}
+	return elements;
+}
+
 function clearHandlers() {
 	html.onselectstart = html.oncopy = html.oncut = html.onpaste = html.onkeydown = html.oncontextmenu = html.onmousemove = body.oncopy = body.oncut = body.onpaste = body.onkeydown = body.oncontextmenu = body.onmousedown = body.onmousemove = body.onselectstart = body.ondragstart = doc.onselectstart = doc.oncopy = doc.oncut = doc.onpaste = doc.onkeydown = doc.oncontextmenu = doc.onmousedown = doc.onmouseup = window.onkeyup = window.onkeydown = null;
-	html.style.webkitUserSelect = html.style.userSelect = body.style.webkitUserSelect = body.style.userSelect = 'auto';
+	allowUserSelect(html);
+	allowUserSelect(body);
 }
 clearHandlers();
 
@@ -59,22 +79,6 @@ function replaceElementsEventsWithClone(elements) {
 	var length = elements.length;
 	for (var i = 0; i < length; ++ i) {
 		replaceElementEventsWithClone(elements[i]);
-	}
-}
-
-function allowUserSelect(element) {
-	element.style.webkitUserSelect = element.style.userSelect = 'auto';
-}
-
-function allowUserSelectById(element_id) {
-	allowUserSelect(doc.getElementById(element_id));
-}
-
-function allowUserSelectByClassName(element_class) {
-	var elements = doc.getElementsByClassName(element_class);
-	var len = elements.length;
-	for (var i = 0; i < len; ++i) {
-		allowUserSelect(elements[i]);
 	}
 }
 
@@ -451,6 +455,34 @@ if (result) {
 				break;
 			case 'www.wattpad.com':
 				jQuery('[oncontextmenu]').removeAttr('oncontextmenu');
+				break;
+			case 'www.pressplay.cc':
+				allowUserSelectByClassName('article-content-box');
+				elements = doc.getElementsByClassName('project-timeline-article-page');
+				if (elements.length > 0) {
+					element = elements[0];
+					element.oncontextmenu = element.ondragstart = element.onselectstart = null;
+				}
+				break;
+			case 'www.bcquan.me':
+				allowUserSelectByClassName('noselect');
+				elements = doc.getElementsByClassName('news_detail');
+				if (elements.length > 0) {
+					element = elements[0];
+					element.oncontextmenu = element.ondragstart = element.onselectstart = null;
+				}
+				break;
+			case 'www.xuexi.la':
+				Cookies.set(cookieKey, 0);
+				break;
+			case 'vip.shulink.com':
+				allowUserSelectByClassName('acontent');
+				break;
+			case 'www.8591.com.tw':
+				allowUserSelectById('editer_main').onselectstart = null;
+				break;
+			case 'buzzlife.info':
+				removeEventAttributes(body);
 				break;
 		}
 	} catch (e) {
