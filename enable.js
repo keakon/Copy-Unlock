@@ -3,6 +3,12 @@ var doc = document;
 var body = doc.body;
 var html = doc.documentElement;
 
+function addAllowUserSelectStyle(selection) {
+	var element = document.createElement('style');
+	element.append(selection + '{-webkit-user-select:auto !important;user-select:auto !important}');
+	body.append(element);
+}
+
 function allowUserSelect(element) {
 	element.setAttribute('style', '-webkit-user-select: auto !important');
 	element.setAttribute('style', 'user-select: auto !important');
@@ -139,9 +145,10 @@ if (result) {
 				doc.removeEventListener('keydown', gaia.blockContent, false);
 				break;
 			case 'book.zongheng.com':
-				element = jQuery('.readcon')[0];
-				element.style.webkitUserSelect = 'auto';
-				element.onselectstart = null;
+				jQuery('<style>.reader_box, .reader_box .content p{-webkit-user-select:auto !important}</style>').appendTo(body);
+				element = doc.getElementsByClassName('reader_box')[0];
+				element.removeAttribute('onselectstart');
+				element.removeAttribute('unselectable');
 				break;
 			case 'www.kasi-time.com':
 				element = doc.getElementById('center');
@@ -349,7 +356,7 @@ if (result) {
 				}
 				break;
 			case 'hshi.58.com':
-				jQuery("#generalDesc").off();
+				jQuery('#generalDesc').off();
 				break;
 			case 'www.heatmetering.cn':
 				jQuery('.box').unbind();
@@ -430,9 +437,7 @@ if (result) {
 				replaceElementEventsWithClone(doc.getElementById('article-content'));
 				break;
 			case 'www.horou.com':
-				element = document.createElement('style');
-				element.append('*{-webkit-user-select:auto;user-select:auto}');
-				body.append(element);
+				addAllowUserSelectStyle('*');
 				break;
 			case 'www.sis001.com':
 				allowUserSelectByClassName('noSelect');
@@ -452,12 +457,23 @@ if (result) {
 				break;
 			case 'sosad.fun':
 				allowUserSelectByClassName('chapter');
+				addAllowUserSelectStyle('.no-selection');
 				break;
 			case 'www.wattpad.com':
 				jQuery('[oncontextmenu]').removeAttr('oncontextmenu');
 				break;
 			case 'www.pressplay.cc':
-				allowUserSelectByClassName('article-content-box');
+				elements = doc.getElementsByClassName('article-content-box');
+				var len = elements.length;
+				for (var i = 0; i < len; ++i) {
+					element = elements[i];
+					allowUserSelect(element);
+					var elements2 = element.getElementsByTagName('p');
+					var len2 = elements2.length;
+					for (var i = 0; i < len2; ++i) {
+						allowUserSelect(elements2[i]);
+					}
+				}
 				elements = doc.getElementsByClassName('project-timeline-article-page');
 				if (elements.length > 0) {
 					element = elements[0];
@@ -483,6 +499,28 @@ if (result) {
 				break;
 			case 'buzzlife.info':
 				removeEventAttributes(body);
+				break;
+			case 'memeon-music.com':
+				window.removeEventListener('keyup', wpccpDisableKeys);
+				window.removeEventListener('keyup', wpccpDisableCtrlActions);
+				window.removeEventListener('keydown', wpccpDisableKeys);
+				window.removeEventListener('keydown', wpccpDisableCtrlActions);
+				// pass through
+			case 'focus2move.com':
+				jQuery('<style>:not(input):not(textarea), img{-webkit-user-select:auto;user-select:auto}</style>').appendTo(body);
+				break;
+			case 'www.hunanhr.cn':
+			case 'www.xuexila.com':
+				doc.cookie = 'is_scan=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/';
+				break;
+			case 'm.lieyunwang.com':
+				jQuery('<style>*{-webkit-user-select:auto}</style>').appendTo(body);
+				break;
+			case 'www.chinatupai.com':
+				removeEventAttributes(doc.getElementById('showbox'));
+				break;
+			case 'ibankops.blogspot.com':
+				addAllowUserSelectStyle('.post-body');
 				break;
 		}
 	} catch (e) {
