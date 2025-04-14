@@ -17,7 +17,7 @@
 		},
 		"default_title": "Copy Unlock"
 	},
-	"permissions": ["storage", "tabs"],
+	"permissions": ["storage", "activeTab"],
 	"host_permissions": ["https://*/*", "http://*/*"],
 	"content_scripts": [
 		{
