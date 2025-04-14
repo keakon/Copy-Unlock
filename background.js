@@ -1,4 +1,3 @@
-const STORAGE_KEY = "enabled_domains";
 const DOMAIN_PATTERN = /^https?:\/\/([^\/]+)/;
 
 function getDomainFromUrl(url) {
@@ -14,9 +13,8 @@ async function needEnableCopy(url) {
   if (!domain) {
     return false;
   }
-  const data = await chrome.storage.local.get([STORAGE_KEY]);
-  const enabledDomains = data[STORAGE_KEY] || {};
-  return domain in enabledDomains;
+  const data = await chrome.storage.sync.get(domain);
+  return domain in data;
 }
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
@@ -38,17 +36,15 @@ chrome.action.onClicked.addListener(async (tab) => {
   const domain = getDomainFromUrl(tab.url);
   if (domain && tab.id) {
     let enabled;
-    const data = await chrome.storage.local.get([STORAGE_KEY]);
-    const enabledDomains = data[STORAGE_KEY] || {};
+    const data = await chrome.storage.sync.get(domain);
 
-    if (enabledDomains[domain]) {
+    if (data[domain]) {
       enabled = false;
-      delete enabledDomains[domain];
+      await chrome.storage.sync.remove(domain);
     } else {
       enabled = true;
-      enabledDomains[domain] = true;
+      await chrome.storage.sync.set({ [domain]: true });
     }
-    await chrome.storage.local.set({ [STORAGE_KEY]: enabledDomains });
     await chrome.action.setIcon({
       path: enabled ? "icon19.png" : "icon19-disable.png",
       tabId: tab.id,

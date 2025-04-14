@@ -1,4 +1,3 @@
-const STORAGE_KEY = "enabled_domains";
 const DOMAIN_PATTERN = /^https?:\/\/([^\/]+)/;
 
 function getDomainFromUrl(url) {
@@ -48,9 +47,8 @@ async function checkInitialState() {
     return;
   }
 
-  const data = await chrome.storage.local.get([STORAGE_KEY]);
-  const enabledDomains = data[STORAGE_KEY] || {};
-  if (currentDomain in enabledDomains) {
+  const data = await chrome.storage.sync.get(currentDomain);
+  if (currentDomain in data) {
     enableCopy();
   }
 }
