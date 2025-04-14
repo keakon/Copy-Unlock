@@ -1,8 +1,8 @@
 {
-	"name": "Enable Copy",
+	"name": "Copy Unlock",
 	"version": "2.0",
 	"manifest_version": 3,
-	"description": "Allow selecting, copying, pasting and right clicking in some restricted pages.",
+	"description": "Allow selecting, copying, pasting and right clicking in most restricted pages.",
 	"icons": {
 		"19": "icon19.png",
 		"128": "icon128.png"
@@ -15,7 +15,7 @@
 		"default_icon": {
 			"19": "icon19-disable.png"
 		},
-		"default_title": "Enable Copy"
+		"default_title": "Copy Unlock"
 	},
 	"permissions": ["storage", "tabs"],
 	"host_permissions": ["https://*/*", "http://*/*"],
