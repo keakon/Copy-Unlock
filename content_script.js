@@ -15,25 +15,28 @@ function stopEventPropagation(event) {
 const eventsToStop = [
   "contextmenu",
   "selectstart",
+  "select",
+  "dragstart",
   "copy",
   "beforecopy",
   "cut",
+  "paste",
   "mousedown",
   "mouseup",
-  "dragstart",
   "keydown",
+  "keyup",
+  "keypress",
 ];
 
 function enableCopy() {
   eventsToStop.forEach((eventName) => {
-    document.addEventListener(eventName, stopEventPropagation, true);
+    window.addEventListener(eventName, stopEventPropagation, true);
   });
 
   let styleElement = document.createElement("style");
-  styleElement.innerHTML = `*, *::before, *::after {
-  user-select: text !important; -webkit-user-select: text !important; cursor: auto !important;
-}
-body { overflow: auto !important; }`;
+  styleElement.innerHTML = `html, body, *, *::before, *::after {
+  user-select: text !important; -webkit-user-select: text !important;
+}`;
   requestAnimationFrame(() => {
     (document.head || document.documentElement).appendChild(styleElement);
   });

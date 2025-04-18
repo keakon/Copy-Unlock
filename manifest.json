@@ -1,6 +1,6 @@
 {
 	"name": "Copy Unlock",
-	"version": "2.0",
+	"version": "2.1",
 	"manifest_version": 3,
 	"description": "Allow selecting, copying, pasting and right clicking in most restricted pages.",
 	"icons": {

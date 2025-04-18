@@ -35,18 +35,18 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 chrome.action.onClicked.addListener(async (tab) => {
   const domain = getDomainFromUrl(tab.url);
   if (domain && tab.id) {
-    let enabled;
     const data = await chrome.storage.sync.get(domain);
+    let path;
 
     if (data[domain]) {
-      enabled = false;
+      path = "icon19-disable.png";
       await chrome.storage.sync.remove(domain);
     } else {
-      enabled = true;
+      path = "icon19.png";
       await chrome.storage.sync.set({ [domain]: true });
     }
     await chrome.action.setIcon({
-      path: enabled ? "icon19.png" : "icon19-disable.png",
+      path,
       tabId: tab.id,
     });
 
@@ -56,16 +56,19 @@ chrome.action.onClicked.addListener(async (tab) => {
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await chrome.tabs.get(activeInfo.tabId);
-  if (tab?.url && tab.url.startsWith("http")) {
-    const enabled = await needEnableCopy(tab.url);
-    await chrome.action.setIcon({
-      path: enabled ? "icon19.png" : "icon19-disable.png",
-      tabId: activeInfo.tabId,
-    });
+  let path;
+
+  if (
+    tab?.url &&
+    tab.url.startsWith("http") &&
+    (await needEnableCopy(tab.url))
+  ) {
+    path = "icon19.png";
   } else {
-    await chrome.action.setIcon({
-      path: "icon19-disable.png",
-      tabId: activeInfo.tabId,
-    });
+    path = "icon19-disable.png";
   }
+  await chrome.action.setIcon({
+    path,
+    tabId: activeInfo.tabId,
+  });
 });
